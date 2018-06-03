@@ -20,7 +20,7 @@ class Treegenerater(object):
     def newValue(self):
         tempLeaf = []
         for i in range(0, self.leafNum):
-            tempLeaf.append(random.randint(0,100))
+            tempLeaf.append(random.randint(1,9))
 
         self.leafList = tempLeaf
     def getDepth(self):

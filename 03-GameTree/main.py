@@ -1,12 +1,15 @@
 import minimax as a
+import purning
 
 
 if __name__ == '__main__':
+    """
     myTree = a.MiniMax(3,2)
     print("nodeNum = ",myTree.getNodeNum())
 
-
+    
     print(myTree.minMaxTree[0])
+    
     for i in range(0,myTree.getDepth()):
         depth = myTree.getDepth()-i
 
@@ -17,4 +20,9 @@ if __name__ == '__main__':
             print("max")
         else:
             print("min")
+    """
 
+    p = purning.Purning(2,3)
+    p.testData()
+    print(p.minMaxTree[0])
+    p.purningStart()
