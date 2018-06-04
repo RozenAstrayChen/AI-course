@@ -1,5 +1,11 @@
 import minimax as a
 import purning
+import purningV2
+
+test = [-5,36,-23,-21,-47,49,-1,2,31,-33,-18,-37,32,-41,35,-46]
+bits = 2
+depth = 4
+#test = [-5,36,-23,-21,-47,49,-1,2]
 
 
 if __name__ == '__main__':
@@ -21,8 +27,17 @@ if __name__ == '__main__':
         else:
             print("min")
     """
-
+    """
     p = purning.Purning(2,3)
     p.testData()
     print(p.minMaxTree[0])
     p.purningStart()
+    """
+    p = purningV2.PurningV2(bits,depth)
+    #p.testData()
+
+    #frame = p.buildTree(4,[])
+    #p.insertTree(test,2,4,frame)
+    set = p.buildTreeV2(test,p.bits,p.depth)
+    p.buildDepth(set,bits,p.depth-1)
+    p.startPurning()

@@ -29,11 +29,12 @@ class Purning(m.MiniMax):
         self.minMaxTree[0] = [-5,36,-23,-21,-47,49,-1,2,31,-33,-18,-37,32,-41,35,-46]
 
     def purningStart(self):
-
+        nbeta = self.beta
+        nalpha = self.alpha
         beta = self.beta
         alpha = self.alpha
 
-        currentDepth = 2
+        currentDepth = 3
         if self.judgeMinMax(currentDepth):
             print("do max")
         else:
@@ -48,6 +49,8 @@ class Purning(m.MiniMax):
                 self.purningLeaf.append(self.minMaxTree[0][i])
             else:
 
+
+
                 alpha,beta = self.purningAlgorithm(self.minMaxTree[0][i],
                                                    alpha,
                                                    beta,depth)
@@ -55,11 +58,16 @@ class Purning(m.MiniMax):
 
 
 
-            if i % self.bits  and i !=0 :
-                alpha,beta = self.swaping(alpha,beta,depth)
-            elif i % (self.bits*self.bits) and i % self.bits and i != 0 :
+
+            if (i+1) % (self.bits*self.bits)  == 0:
 
                 alpha,beta = self.swaping(alpha,beta,depth-1)
+
+            elif (i+1) % self.bits  == 0:
+                print(i+1,self.bits,(i+1) % self.bits)
+                alpha,beta = self.swaping(alpha,beta,depth)
+                #alpha = self.alpha
+                #beta = self.beta
 
 
 
@@ -69,15 +77,12 @@ class Purning(m.MiniMax):
 
 
     def purningAlgorithm(self,node,alpha,beta,depth):
-        #judge is puring range?
-
 
         if depth:
-
-            if node < beta :
+            if node > beta :
                 beta = node
         else:
-            if node > beta:
+            if node < beta:
                 beta = node
 
 
@@ -89,14 +94,15 @@ class Purning(m.MiniMax):
         if NextminiORmax:
             print("swapping max")
             #max
-            if alpha < beta:
-                alpha = beta
-            beta = self.beta
+            if alpha > beta:
+                beta = alpha
+            alpha = self.alpha
         else:
             print("swapping min")
             #min
-            beta = alpha
-            alpha = self.alpha
+            if alpha < beta:
+                alpha = beta
+            beta = self.beta
 
         print("after swaping ,alpha = ", alpha, " beta = ", beta)
         return alpha,beta
