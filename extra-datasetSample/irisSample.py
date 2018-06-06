@@ -88,7 +88,7 @@ while error != 0:
             #show iris data 
             sns.lmplot('sepal length (cm)', 'petal length (cm)', data=iris_data, fit_reg=False, hue='target_class')
 
-            # 前一個Decision boundary 的法向量
+            # Previous Decision boundary Normal vector
             if w[1] != 0:
                 x_last_decision_boundary = np.linspace(0, w[1])
                 y_last_decision_boundary = (w[2] / w[1]) * x_last_decision_boundary
@@ -97,23 +97,23 @@ while error != 0:
             w += y * x
             print("x: " + str(x))
             print("w: " + str(w))
-            # x向量 linspace is return (arg1..arg2) space
+            # x vector linspace is return (arg1..arg2) space
             x_vector = np.linspace(0, x[1])
             # petal (len / sepal len) * x
             y_vector = (x[2] / x[1]) * x_vector
             plt.plot(x_vector, y_vector, 'b')
             
-            """
-            # Decision boundary 的方向向量
+            
+            # Decision boundary vector
             x_decision_boundary = np.linspace(-0.5, 7)
             y_decision_boundary = (-w[1] / w[2]) * x_decision_boundary - (w[0] / w[2])
             plt.plot(x_decision_boundary, y_decision_boundary, 'r')
-            # Decision boundary 的法向量
+            # Decision boundary Normal vector
             x_decision_boundary_normal_vector = np.linspace(0, w[1])
             y_decision_boundary_normal_vector = (w[2] / w[1]) * x_decision_boundary_normal_vector
             plt.plot(x_decision_boundary_normal_vector, y_decision_boundary_normal_vector, 'g')
             
-            """
+            
             plt.xlim(-0.5, 7.5)
             plt.ylim(5, -3)
             plt.show()
