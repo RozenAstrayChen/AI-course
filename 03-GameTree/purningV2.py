@@ -90,7 +90,7 @@ class PurningV2(m.MiniMax):
 
 
     def startPurning(self):
-        self.testData()
+        #self.testData()
         (alpha, beta) = self.children(self.tree, 0, self.alpha, self.beta)
 
         print("(alpha, beta): ", alpha, beta)
