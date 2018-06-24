@@ -29,7 +29,7 @@ class Indivdual(Queen):
 
         for i in range(self.scope):
             for j in range(i+1,self.scope):
-                if math.fabs(self.pieceNode[i] - self.pieceNode[j]) == j-i:
+                if math.fabs(self.pieceNode[i] - self.pieceNode[j]) == j - i:
                     # for each queen guarding another one reduce fitness by 1
                     fitness -= 1
         return  fitness

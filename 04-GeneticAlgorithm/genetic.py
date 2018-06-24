@@ -4,7 +4,8 @@ from indivdual import *
 class Genetic(object):
     def __init__(self,scope):
         self.scope = scope
-        self.goal = int((self.scope*(self.scope-1))/2)
+        #self.goal = int((self.scope*(self.scope-1))/2)
+        self.goal = int((self.scope * (self.scope - 1)))
 
     def showData(self,population,fitnessValue):
         j = 0
@@ -54,7 +55,7 @@ class Genetic(object):
 
             #next generation do fitness
             self.population = nextPopulation
-            self.fitnessValue = self.fitnessFunction(self.population)
+            #self.fitnessValue = self.fitnessFunction(self.population)
 
 
 
@@ -114,8 +115,8 @@ class Genetic(object):
             fitnessValue.pop(maxIndex)
 
         print('----after select-------')
-        for i in range(select):
-            print(clonePopulation[i].pieceNode)
+        #for i in range(select):
+            #print(clonePopulation[i].pieceNode)
 
         return clonePopulation
 
@@ -139,7 +140,7 @@ class Genetic(object):
 
             #generationChromosome = self.chromosomeSingleSwitch(maleTemp
             #                                             ,femaleTemp)
-            generationChromosome = self.chromosomeSingleSwitch(maleTemp
+            generationChromosome = self.chromosomeTwoSwitch(maleTemp
                                                                , femaleTemp)
 
 
@@ -173,9 +174,9 @@ class Genetic(object):
 
                     #print(i, mutationIndex)
                     population[i][mutationIndex] = mutationChromosome
-                #print('muation is index ',i," after is ",population[i])
+                print('muation is index ',i," after is ",population[i])
 
-                #print("mutation after =",population)
+                print("mutation after =",population)
 
         return population
 
@@ -183,12 +184,16 @@ class Genetic(object):
 
 
     def reachGoal(self,population):
+
         for i in population:
-            print(' collision = ',i.judgeBoard())
+
+            #print(' collision = ',i.judgeBoard())
             if i.judgeBoard() == 0:
                 print('reach point!')
                 i.showBoard()
                 return True
+
+
 
 
 
