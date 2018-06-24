@@ -19,6 +19,29 @@ class Indivdual(Queen):
 
             self.pieceNode.append(chromosome[i])
 
+    def switch(self, count):
+        ''' swithed queen places 'count' times'''
+        count = int(count)
+
+        for i in range(count):
+            j = random.randint(0, self.scope - 1)
+            k = random.randint(0, self.scope - 1)
+            self.pieceNode[j], self.pieceNode[k] = self.pieceNode[k], self.pieceNode[j]
+
+
+
+    def regenerate(self):
+        ''' randomly moves scope/2 queens
+        used for creating new generation'''
+
+        # randomly switvh 2 itmes
+        #self.switch(self.scope/2)
+        self.switch(3)
+
+        # get a random number if it's lower than 0.25 switch anither item
+        if random.uniform(0, 1) < 0.25:
+            self.switch(1)
+
     """
     Summary:
         Fitness Value
@@ -40,8 +63,21 @@ class Indivdual(Queen):
     def computeFitness2(self,goal):
         collision = self.judgeBoard()
 
-        return (goal-collision)
+        return (collision)
 
+    def print_board(self):
+        ''' prints current board in a nice way!'''
+        for row in range(self.scope):
+            print("", end="|")
+
+            queen = self.pieceNode.index(row)
+
+            for col in range(self.scope):
+                if col == queen:
+                    print("Q", end="|")
+                else:
+                    print("_", end="|")
+            print("")
 
 
     """

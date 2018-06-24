@@ -4,8 +4,8 @@ from indivdual import *
 class Genetic(object):
     def __init__(self,scope):
         self.scope = scope
-        #self.goal = int((self.scope*(self.scope-1))/2)
-        self.goal = int((self.scope * (self.scope - 1)))
+        self.goal = int((self.scope*(self.scope-1))/2)
+        #self.goal = int((self.scope * (self.scope - 1)))
 
     def showData(self,population,fitnessValue):
         j = 0
@@ -16,7 +16,9 @@ class Genetic(object):
     def prepareNextYear(self,population):
         #print(len(population),self.num)
         for i in range(len(population),self.num):
-            population.append(Indivdual(self.scope))
+            newIndivdual = Indivdual(self.scope)
+            newIndivdual.regenerate()
+            population.append(newIndivdual)
         return population
     """
         Summary:
@@ -33,7 +35,7 @@ class Genetic(object):
 
             self.showData(self.population,self.fitnessValue)
 
-            if self.reachGoal(self.population):
+            if self.reachGoal():
                 print('did times = ',time)
                 break
             else:
@@ -43,8 +45,7 @@ class Genetic(object):
 
             # generate chromosome
             generationChromosome = self.Crossover(survivePopulation)
-            # mutation
-            generationChromosome = self.mutation(probability, generationChromosome)
+
 
 
 
@@ -55,7 +56,15 @@ class Genetic(object):
 
             #next generation do fitness
             self.population = nextPopulation
-            #self.fitnessValue = self.fitnessFunction(self.population)
+            self.fitnessValue = self.fitnessFunction(self.population)
+
+            if self.reachGoal():
+                print('did times = ',time)
+                break
+
+            # mutation
+            self.population = self.mutation(probability, self.population)
+
 
 
 
@@ -79,6 +88,7 @@ class Genetic(object):
         for i in range(0,num):
 
             indivdual = Indivdual(self.scope)
+            indivdual.regenerate()
             population.append(indivdual)
 
         return  population
@@ -94,7 +104,7 @@ class Genetic(object):
         fitnessSquence = []
         for i in population:
             #fitnessSquence.append(i.computeFitness1(self.goal))
-            fitnessSquence.append(i.computeFitness2(self.goal))
+            fitnessSquence.append(i.computeFitness1(self.goal))
 
         return fitnessSquence
 
@@ -115,8 +125,8 @@ class Genetic(object):
             fitnessValue.pop(maxIndex)
 
         print('----after select-------')
-        #for i in range(select):
-            #print(clonePopulation[i].pieceNode)
+        for i in range(select):
+            print(clonePopulation[i].pieceNode)
 
         return clonePopulation
 
@@ -140,14 +150,14 @@ class Genetic(object):
 
             #generationChromosome = self.chromosomeSingleSwitch(maleTemp
             #                                             ,femaleTemp)
-            generationChromosome = self.chromosomeTwoSwitch(maleTemp
+            generationChromosome = self.chromsomeQueenSwitch(maleTemp
                                                                , femaleTemp)
 
 
             offSpring+=generationChromosome
 
         print('---CrossOver---')
-        #print('offSpring',offSpring)
+        print('offSpring',offSpring)
         return offSpring
 
 
@@ -165,26 +175,18 @@ class Genetic(object):
             randomInt = random.randint(0,100)
             if randomInt <= probability:
                 print("Mutation happen!")
+                population[i].switch(self.scope)
 
 
-                for j in range(0,int(self.scope/2)):
-
-                    mutationChromosome = random.randint(0,self.scope-1)
-                    mutationIndex = random.randint(0,self.scope-1)
-
-                    #print(i, mutationIndex)
-                    population[i][mutationIndex] = mutationChromosome
-                print('muation is index ',i," after is ",population[i])
-
-                print("mutation after =",population)
 
         return population
 
 
 
 
-    def reachGoal(self,population):
+    def reachGoal(self):
 
+        '''
         for i in population:
 
             #print(' collision = ',i.judgeBoard())
@@ -192,7 +194,16 @@ class Genetic(object):
                 print('reach point!')
                 i.showBoard()
                 return True
-
+        '''
+        j = 0
+        for i in self.fitnessValue:
+            if i == self.goal:
+                print('reach point!')
+                print('=================')
+                print(self.population[j].pieceNode)
+                self.population[j].print_board()
+                return  True
+            j +=1
 
 
 
@@ -268,6 +279,48 @@ class Genetic(object):
                                     next2Chromosome)
 
         return generationChromosome
+
+    def chromsomeQueenSwitch(self,male, female ):
+
+        previous1Chromosome = []
+        middle1Chromosome = []
+        next1Chromosome = []
+        currentChromosome = []
+
+
+        chromosomeLen = int((len(male.pieceNode) + len(female.pieceNode)) / 2)
+
+        previous = int(chromosomeLen * 0.2)
+        middle = int(chromosomeLen * 0.8)
+        next = int(chromosomeLen - middle)
+
+        #special
+        for i in range (previous,middle):
+
+            middle1Chromosome.append(male.pieceNode[i])
+
+        for i in middle1Chromosome:
+            female.pieceNode.remove(i)
+        for i in range (0,previous):
+            previous1Chromosome.append(female.pieceNode[i])
+            female.pieceNode.pop(i)
+
+        next1Chromosome = female.pieceNode
+
+        currentChromosome.append(previous1Chromosome+
+                                 middle1Chromosome+
+                                 next1Chromosome)
+
+        return currentChromosome
+
+
+
+
+    def findSameValue(self,value,list):
+        for i in list:
+            if i == value:
+                return  False
+        return True
 
 
 

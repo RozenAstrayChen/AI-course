@@ -74,15 +74,16 @@ class ChessBoard(object):
     def generatePiece_random(self,number):
 
         currentNumber = number-1
-
+        '''
         for i in range (0,number):
 
             randomCol = random.randint(0,currentNumber)
-
+            
             self.chessboard[i][randomCol] = 1
 
             self.pieceNode.append(randomCol)
-
+        '''
+        self.pieceNode = list(range(0,number))
 
 
     '''Move to 
