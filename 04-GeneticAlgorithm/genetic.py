@@ -13,14 +13,15 @@ class Genetic(object):
             j += 1
 
     def prepareNextYear(self,population):
-        for i in range(len(population)-1,self.num):
+        #print(len(population),self.num)
+        for i in range(len(population),self.num):
             population.append(Indivdual(self.scope))
         return population
     """
         Summary:
             Initial Population
     """
-    def startGA(self,num):
+    def startGA(self,num,probability):
         time = 0
         self.num = num
         self.population = self.initPopulation(num)
@@ -41,6 +42,10 @@ class Genetic(object):
 
             # generate chromosome
             generationChromosome = self.Crossover(survivePopulation)
+            # mutation
+            generationChromosome = self.mutation(probability, generationChromosome)
+
+
 
             # grow up to indvidual
             nextPopulation = []
@@ -50,7 +55,11 @@ class Genetic(object):
             #next generation do fitness
             self.population = nextPopulation
             self.fitnessValue = self.fitnessFunction(self.population)
-            self.showData(self.population, self.fitnessValue)
+
+
+
+
+            #self.showData(self.population, self.fitnessValue)
             #
             self.population = self.prepareNextYear(self.population)
 
@@ -83,7 +92,8 @@ class Genetic(object):
     def fitnessFunction(self, population):
         fitnessSquence = []
         for i in population:
-            fitnessSquence.append(i.computeFitness(self.goal))
+            #fitnessSquence.append(i.computeFitness1(self.goal))
+            fitnessSquence.append(i.computeFitness2(self.goal))
 
         return fitnessSquence
 
@@ -93,7 +103,7 @@ class Genetic(object):
     """
     def selection(self,population,fitnessValue):
         clonePopulation =[]
-        select = int(self.num * 0.6)
+        select = int(self.num * 0.4)
         for i in range (select):
             maxIndex = fitnessValue.index(max(fitnessValue))
 
@@ -124,26 +134,19 @@ class Genetic(object):
             female = random.randint(0, len(survivePopulation) - 1)
             femaleTemp = survivePopulation[female]
             survivePopulation.pop(female)
-            '''
-            while True:
-                print(len(survivePopulation))
-                female = random.randint(0, len(survivePopulation) - 2)
-                print('male  =', male, 'female =', female)
-                if male != female:
-                    break
-            '''
-            #print('male = ',male)
-            #print('female = ',female)
 
 
-            generationChromosome = self.chromosomeSwitch(maleTemp
-                                                         ,femaleTemp)
+
+            #generationChromosome = self.chromosomeSingleSwitch(maleTemp
+            #                                             ,femaleTemp)
+            generationChromosome = self.chromosomeSingleSwitch(maleTemp
+                                                               , femaleTemp)
 
 
             offSpring+=generationChromosome
 
         print('---CrossOver---')
-        print('offSpring',offSpring)
+        #print('offSpring',offSpring)
         return offSpring
 
 
@@ -152,8 +155,32 @@ class Genetic(object):
     Summary:
         Mutation
     """
-    def Mutation(self):
-        pass
+    def mutation(self,probability,population):
+
+
+
+        for i in (0,len(population)-1):
+
+            randomInt = random.randint(0,100)
+            if randomInt <= probability:
+                print("Mutation happen!")
+
+
+                for j in range(0,int(self.scope/2)):
+
+                    mutationChromosome = random.randint(0,self.scope-1)
+                    mutationIndex = random.randint(0,self.scope-1)
+
+                    #print(i, mutationIndex)
+                    population[i][mutationIndex] = mutationChromosome
+                #print('muation is index ',i," after is ",population[i])
+
+                #print("mutation after =",population)
+
+        return population
+
+
+
 
     def reachGoal(self,population):
         for i in population:
@@ -165,7 +192,7 @@ class Genetic(object):
 
 
 
-    def chromosomeSwitch(self,male,female):
+    def chromosomeSingleSwitch(self,male,female):
         #print('male = ',male.pieceNode)
         #print('female = ',female.pieceNode)
         previous1Chromosome = []
@@ -187,13 +214,56 @@ class Genetic(object):
             previous2Chromosome.append(female.pieceNode[i])
 
         for i in range (previous,chromosomeLen):
-            next1Chromosome.append(female.pieceNode[i])
-            next2Chromosome.append(male.pieceNode[i])
+            next1Chromosome.append(male.pieceNode[i])
+            next2Chromosome.append(female.pieceNode[i])
 
 
-        generationChromosome.append(previous1Chromosome + next1Chromosome)
-        generationChromosome.append(previous2Chromosome + next2Chromosome)
+        generationChromosome.append(previous1Chromosome + next2Chromosome)
+        generationChromosome.append(previous2Chromosome + next1Chromosome)
         return generationChromosome
+
+    def chromosomeTwoSwitch(self, male, female):
+        previous1Chromosome = []
+        previous2Chromosome = []
+
+        middle1Chromosome = []
+        middle2Chromosome = []
+
+        next1Chromosome = []
+        next2Chromosome = []
+
+        generationChromosome = []
+
+        chromosomeLen = int((len(male.pieceNode) + len(female.pieceNode)) / 2)
+
+        previous = int(chromosomeLen*0.3)
+        middle = int(chromosomeLen*0.8)
+
+
+        #Two-point
+        for i in range (previous):
+            previous1Chromosome.append(male.pieceNode[i])
+            previous2Chromosome.append(female.pieceNode[i])
+
+        for i in range (previous,middle):
+            middle1Chromosome.append(male.pieceNode[i])
+            middle2Chromosome.append(female.pieceNode[i])
+
+        for i in range (middle,chromosomeLen):
+            next1Chromosome.append(male.pieceNode[i])
+            next2Chromosome.append(female.pieceNode[i])
+
+
+
+        generationChromosome.append(previous1Chromosome+
+                                    middle2Chromosome+
+                                    next1Chromosome)
+        generationChromosome.append(previous2Chromosome+
+                                    middle1Chromosome+
+                                    next2Chromosome)
+
+        return generationChromosome
+
 
 
     def growUp(self,chromosome):

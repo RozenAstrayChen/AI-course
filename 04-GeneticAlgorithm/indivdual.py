@@ -23,7 +23,7 @@ class Indivdual(Queen):
     Summary:
         Fitness Value
     """
-    def computeFitness(self,goal):
+    def computeFitness1(self,goal):
         #return self.judgeBoard()
         fitness = goal
 
@@ -33,6 +33,15 @@ class Indivdual(Queen):
                     # for each queen guarding another one reduce fitness by 1
                     fitness -= 1
         return  fitness
+    """
+    Summary:
+        Fitness Value
+    """
+    def computeFitness2(self,goal):
+        collision = self.judgeBoard()
+
+        return (goal-collision)
+
 
 
     """
