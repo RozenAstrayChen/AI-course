@@ -92,14 +92,15 @@ while error != 0:
             if w[1] != 0:
                 x_last_decision_boundary = np.linspace(0, w[1])
                 y_last_decision_boundary = (w[2] / w[1]) * x_last_decision_boundary
-                #plt.plot(x_last_decision_boundary, y_last_decision_boundary, 'c--')
+                plt.plot(x_last_decision_boundary, y_last_decision_boundary, 'c--')
             # w += y * x is our function
             w += y * x
             print("x: " + str(x))
             print("w: " + str(w))
             # x vector linspace is return (arg1..arg2) space
             x_vector = np.linspace(0, x[1])
-            # petal (len / sepal len) * x
+            # （ petal len / sepal len) * x
+            # y = (feature1 / featrue2) * x
             y_vector = (x[2] / x[1]) * x_vector
             plt.plot(x_vector, y_vector, 'b')
             
