@@ -1,9 +1,9 @@
 
 import genetic
 
-boardSize = 10
+boardSize = 8
 populationSize = 10
-probability = 30
+probability = 10
 
 
 if __name__ == "__main__":

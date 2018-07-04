@@ -150,7 +150,7 @@ class Genetic(object):
 
             #generationChromosome = self.chromosomeSingleSwitch(maleTemp
             #                                             ,femaleTemp)
-            generationChromosome = self.chromsomeQueenSwitch(maleTemp
+            generationChromosome = self.chromosomeSingleSwitch(maleTemp
                                                                , femaleTemp)
 
 
@@ -168,15 +168,14 @@ class Genetic(object):
     """
     def mutation(self,probability,population):
 
+        randomInt = random.randint(0, 99)
 
+        if randomInt < probability:
+            print("Mutation happen!")
 
-        for i in (0,len(population)-1):
-
-            randomInt = random.randint(0,100)
-            if randomInt <= probability:
-                print("Mutation happen!")
-                population[i].switch(self.scope)
-
+            for i in (0,len(population)-1):
+                population[i].switch(self.scope/2)
+                print('mutation ivdivdual = ',population[i].pieceNode,"i = ",i)
 
 
         return population
@@ -233,52 +232,48 @@ class Genetic(object):
             next1Chromosome.append(male.pieceNode[i])
             next2Chromosome.append(female.pieceNode[i])
 
+        #print('test = ', previous1Chromosome, next2Chromosome)
+        newChromosome1 = self.judgementSquence(previous1Chromosome + next2Chromosome)
 
-        generationChromosome.append(previous1Chromosome + next2Chromosome)
-        generationChromosome.append(previous2Chromosome + next1Chromosome)
+        generationChromosome.append(newChromosome1)
+
+        newChromosome2 = self.judgementSquence(previous2Chromosome + next1Chromosome)
+        generationChromosome.append(newChromosome2)
+
+
         return generationChromosome
 
-    def chromosomeTwoSwitch(self, male, female):
-        previous1Chromosome = []
-        previous2Chromosome = []
+    def judgementSquence(self,chromosome):
 
-        middle1Chromosome = []
-        middle2Chromosome = []
-
-        next1Chromosome = []
-        next2Chromosome = []
-
-        generationChromosome = []
-
-        chromosomeLen = int((len(male.pieceNode) + len(female.pieceNode)) / 2)
-
-        previous = int(chromosomeLen*0.3)
-        middle = int(chromosomeLen*0.8)
-
-
-        #Two-point
-        for i in range (previous):
-            previous1Chromosome.append(male.pieceNode[i])
-            previous2Chromosome.append(female.pieceNode[i])
-
-        for i in range (previous,middle):
-            middle1Chromosome.append(male.pieceNode[i])
-            middle2Chromosome.append(female.pieceNode[i])
-
-        for i in range (middle,chromosomeLen):
-            next1Chromosome.append(male.pieceNode[i])
-            next2Chromosome.append(female.pieceNode[i])
+        lossChromosome = []
+        for i in range(0,self.scope):
+            #for j in range(0,self.scope):
+            if i in chromosome:
+                pass
+            else:
+                lossChromosome.append(i)
 
 
 
-        generationChromosome.append(previous1Chromosome+
-                                    middle2Chromosome+
-                                    next1Chromosome)
-        generationChromosome.append(previous2Chromosome+
-                                    middle1Chromosome+
-                                    next2Chromosome)
+        for i in range(0,self.scope):
+            #print('chromosome = ', chromosome)
+            rep = 0
+            for j in range(i+1,self.scope):
+                if chromosome[i] == chromosome[j]:
+                    rep+=1
 
-        return generationChromosome
+                if rep >= 1:
+                    rep = 0
+
+                    temp = random.randint(0,int(len(lossChromosome)-1))
+
+                    chromosome[j] = lossChromosome[temp]
+
+                    lossChromosome.remove(chromosome[j])
+
+        return chromosome
+
+
 
     def chromsomeQueenSwitch(self,male, female ):
 
