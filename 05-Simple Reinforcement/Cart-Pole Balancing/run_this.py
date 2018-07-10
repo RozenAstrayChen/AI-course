@@ -242,7 +242,7 @@ if __name__ == "__main__":
 
     #train_simulate(q_table)
 
-    #test_simulate(read_module('10times.npy'),0.1)
+    test_simulate(read_module('100times.npy'),0.1)
 
 
 
