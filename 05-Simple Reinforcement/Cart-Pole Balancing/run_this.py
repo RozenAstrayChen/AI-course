@@ -2,6 +2,7 @@ import gym
 import numpy as np
 import random
 import math
+from tempfile import TemporaryFile
 from time import sleep
 
 #Initialize the "Cart-Pole" enviroment
@@ -24,6 +25,7 @@ STATE_BOUNDS[3] = [-math.radians(50),math.radians(50)]
 ACTION_INDEX = len(NUM_BUCKETS)
 
 ## Creating a Q-Table for each state-action pair
+## (1, 1, 6, 3 + 2)
 q_table = np.zeros(NUM_BUCKETS + (NUM_ACTIONS,))
 
 ## Learning related constants
@@ -35,14 +37,31 @@ NUM_EPISODES = 1000
 MAX_T = 250
 STREAK_TO_END = 120
 SOLVED_T = 199
+#SOLVED_T = 1000
 DEBUG_MODE = True
+
+
+def read_module(name):
+    # load...
+    load_table = np.load(name)
+
+    return load_table
+
+def record_rate(episode,rate):
+    fp = open("explore_rate.txt", "a")
+    string = str(episode) + ":" + str(rate) + "\n"
+    fp.write(string)
+    fp.close()
 
 """[Summary]
     Simulate
 """
-def simulate():
+def train_simulate(module):
+
+    learn_table = module
 
     ## Instantiating the learning related parameters
+
     learning_rate = get_learning_rate(0)
     explore_rate = get_explore_rate(0)
     discount_factor = 0.99  # since the world is unchanging
@@ -61,7 +80,7 @@ def simulate():
             env.render()
 
             #Select an action
-            action = select_action(state_0, explore_rate)
+            action = select_action(state_0, explore_rate, learn_table)
 
             #Execute the action
             obv, reward, done, _ = env.step(action)
@@ -71,9 +90,10 @@ def simulate():
 
             #Update the Q based on the result
             best_q = np.amax(q_table[state])
-            q_table[state_0 + (action,)] += learning_rate * \
-                                            (reward + discount_factor*(best_q) -
-                                             q_table[state_0 + (action,)])
+            #Algorithm,
+            # l_rate( reward + Predict - Reality )
+            learn_table[state_0 + (action,)] += learning_rate * (reward + discount_factor*(best_q) - learn_table[state_0 + (action,)])
+
 
             #Setting up for the next iteration
             state_0 = state
@@ -92,32 +112,106 @@ def simulate():
 
                 print("")
 
-            if done:
-                print("Episode %d finished after %f time steps" % (episode, t))
-                if (t >= SOLVED_T):
-                    num_streaks += 1
-                else:
-                    num_streaks = 0
-                break
 
-            # sleep(0.25)
 
-        # It's considered done when it's solved over 120 times consecutively
-        if num_streaks > STREAK_TO_END:
-            break
+        if int(episode) is 10:
+            np.save('10times.npy',learn_table)
+            record_rate(10, explore_rate)
+            sleep(0.25)
+
+        elif  int(episode) is 100:
+            np.save('100times.npy', learn_table)
+            record_rate(100, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 200:
+            np.save('200times.npy', learn_table)
+            record_rate(200, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 300:
+            np.save('300times.npy', learn_table)
+            record_rate(300, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 350:
+            np.save('350times.npy', learn_table)
+            record_rate(350, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 400:
+            np.save('400times.npy', learn_table)
+            record_rate(400, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 450:
+            np.save('450times.npy', learn_table)
+            record_rate(450, explore_rate)
+            sleep(0.25)
+
+        elif int(episode) == 500:
+            np.save('500times.npy', learn_table)
+            record_rate(500, explore_rate)
+            sleep(0.25)
+
 
         # Update parameters
         explore_rate = get_explore_rate(episode)
         learning_rate = get_learning_rate(episode)
 
 
-def select_action(state, explore_rate):
+
+def test_simulate(module,explore_rate):
+
+    testing_table = module
+
+    ## Instantiating the learning related parameters
+
+
+    for episode in range(NUM_EPISODES):
+        #Reset the enviroment
+        obv = env.reset()
+
+        #the initial state
+        state_0 = state_to_bucket(obv)
+
+        for t in range(MAX_T):
+            env.render()
+
+            #Select_action
+            action = select_action(state_0, explore_rate,testing_table)
+
+            #Execute the action
+            obv, _, _, _ = env.step(action)
+
+            #Observe the result
+            state = state_to_bucket(obv)
+
+            # Setting up for the next iteration
+            state_0 = state
+
+            # Print data
+            if (DEBUG_MODE):
+                print("\nEpisode = %d" % episode)
+                print("t = %d" % t)
+                print("Action: %d" % action)
+                print("State: %s" % str(state))
+                print("Explore rate: %f" % explore_rate)
+
+                print("")
+
+
+
+
+
+
+def select_action(state, explore_rate,table):
     # Select a random action
     if random.random() < explore_rate:
         action = env.action_space.sample()
     # Select the action with the highest q
     else:
-        action = np.argmax(q_table[state])
+        action = np.argmax(table[state])
     return action
 
 
@@ -144,4 +238,12 @@ def state_to_bucket(state):
     return tuple(bucket_indice)
 
 if __name__ == "__main__":
-    simulate()
+
+
+    #train_simulate(q_table)
+
+    #test_simulate(read_module('10times.npy'),0.1)
+
+
+
+

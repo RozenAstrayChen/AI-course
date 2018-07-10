@@ -1,5 +1,5 @@
 
-from Q_maze. import Maze
+from Q_maze.maze_env import Maze
 from Sarsa_maze.RL_brain import QLearningTable
 
 #%%
