@@ -2,7 +2,6 @@ import gym
 import numpy as np
 import random
 import math
-from tempfile import TemporaryFile
 from time import sleep
 
 #Initialize the "Cart-Pole" enviroment
@@ -11,7 +10,7 @@ env = gym.make('CartPole-v0')
 
 #Defining the environment related constants
 
-# Number of discrete states (bucket) per state dimension
+# Number of discrete states (bucket)` per state dimension
 NUM_BUCKETS = (1, 1, 6, 3)
 # Number of discrete actions
 NUM_ACTIONS = env.action_space.n #(left, right)
@@ -101,7 +100,7 @@ def train_simulate(module):
             # Print data
             if (DEBUG_MODE):
                 print("\nEpisode = %d" % episode)
-                print("t = %d" % t)
+                print("observation = ", obv)
                 print("Action: %d" % action)
                 print("State: %s" % str(state))
                 print("Reward: %f" % reward)
@@ -193,7 +192,7 @@ def test_simulate(module,explore_rate):
             # Print data
             if (DEBUG_MODE):
                 print("\nEpisode = %d" % episode)
-                print("t = %d" % t)
+                print("observation = ", obv)
                 print("Action: %d" % action)
                 print("State: %s" % str(state))
                 print("Explore rate: %f" % explore_rate)
@@ -242,8 +241,12 @@ if __name__ == "__main__":
 
     #train_simulate(q_table)
 
-    test_simulate(read_module('100times.npy'),0.1)
+    test_simulate(read_module('500times.npy'),0.1)
+    #obv = env.reset()
+    #print(obv)
 
+
+    #print(read_module('100times.npy'))
 
 
 

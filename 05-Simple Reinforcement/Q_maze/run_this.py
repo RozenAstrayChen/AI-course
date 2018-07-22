@@ -2,6 +2,7 @@
 from Q_maze.maze_env import Maze
 from Sarsa_maze.RL_brain import QLearningTable
 
+
 #%%
 def update():
     #learing 100 time
